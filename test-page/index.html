@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browser Lint – Testseite</title>
+  <style>
+    :root { color-scheme: light dark; --bg: #ffffff; --fg: #1f2328; --field: #ffffff; --border: #d0d7de; --muted: #59636e; --chip: #ddf4ff; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0d1117; --fg: #e6edf3; --field: #151b23; --border: #3d444d; --muted: #9198a1; --chip: #0c2d6b; }
+    }
+    body { font: 15px/1.5 system-ui, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; background: var(--bg); color: var(--fg); }
+    h1 { font-size: 1.4rem; margin-bottom: .25rem; }
+    section { margin: 1.75rem 0; }
+    h2 { font-size: 1rem; margin: 0 0 .25rem; }
+    p.hint { color: var(--muted); margin: 0 0 .5rem; font-size: .875rem; }
+    textarea, input, [contenteditable], iframe { box-sizing: border-box; width: 100%; font: inherit; padding: .5rem .6rem;
+      border: 1px solid var(--border); border-radius: 6px; background: var(--field); color: var(--fg); }
+    textarea { min-height: 9rem; }
+    [contenteditable] { min-height: 6rem; }
+    iframe { height: 7rem; padding: 0; }
+    .chip { background: var(--chip); border-radius: 4px; padding: 0 4px; }
+    output { display: block; font-size: .875rem; color: var(--muted); white-space: pre-wrap; }
+    kbd { border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; font-size: .85em; }
+  </style>
+</head>
+<body>
+  <h1>Browser Lint – Testseite</h1>
+  <p class="hint">Feld anklicken, <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> drücken (oder Icon klicken), danach <kbd>Strg</kbd>+<kbd>Z</kbd> testen. Neu laden setzt alles zurück.</p>
+
+  <section>
+    <h2>1. textarea</h2>
+    <p class="hint">Alle fünf Regeln. Ein Strg+Z stellt den Originaltext wieder her.</p>
+    <textarea id="textarea">Hallo  Team ,
+
+ich habe das Dokument angehängt .
+
+
+
+Bitte prüft es bis Freitag ...
+Danke !</textarea>
+  </section>
+
+  <section>
+    <h2>2. input type=text / type=email</h2>
+    <input id="input-text" type="text" value="Kurzer  Betreff ,  bitte lesen !">
+    <p class="hint">E-Mail-Felder entfernen Leerzeichen selbst. Erwartet: „Keine Korrekturen nötig“ ohne Fehler.</p>
+    <input id="input-email" type="email" value="max@example.com  ">
+  </section>
+
+  <section>
+    <h2>3. input type=password</h2>
+    <p class="hint">Wird nie angefasst. Erwartet: „Dieses Feld wird nicht unterstützt“.</p>
+    <input id="input-password" type="password" value="geheim  passwort ...">
+  </section>
+
+  <section>
+    <h2>4. Kontrolliertes Feld (wie React)</h2>
+    <p class="hint">Ein direktes <code>el.value = x</code> würde hier ignoriert. Der State darunter muss sich mitändern.</p>
+    <input id="react-like" type="text" value="State  muss  mitziehen !">
+    <output id="react-state"></output>
+  </section>
+
+  <section>
+    <h2>5. contenteditable wie Gmail</h2>
+    <p class="hint">Zeilen als &lt;div&gt;, Leerzeilen als &lt;div&gt;&lt;br&gt;&lt;/div&gt;, doppelte Leerzeichen als „&amp;nbsp; “.</p>
+    <div id="ce-gmail" contenteditable="true" role="textbox">Hallo&nbsp; Anna ,<div><br></div><div>anbei die Unterlagen .&nbsp;</div><div><br></div><div><br></div><div><br></div><div>Viele Grüße ...</div></div>
+  </section>
+
+  <section>
+    <h2>6. contenteditable mit Formatierung</h2>
+    <p class="hint">Fett/kursiv bleibt erhalten, auch bei Leerzeichen über Knotengrenzen. Code, Zitat und der Chip (contenteditable=false) bleiben unverändert.</p>
+    <div id="ce-rich" contenteditable="true"><p>Das ist <b>wichtig </b> und <i>dringend</i> !</p><p>Code bleibt: <code>a  =  b...</code></p><blockquote>Zitat&nbsp; bleibt  ,  wie es ist .</blockquote><p>Danke <span class="chip" contenteditable="false">@Max  Muster</span> , bis bald ...</p></div>
+  </section>
+
+  <section>
+    <h2>7. contenteditable gemischt</h2>
+    <p class="hint">Leerzeilen direkt nach Text, &lt;br&gt; innerhalb eines Blocks. Leere Listenpunkte bleiben bewusst stehen (Anzeige: „1 nicht änderbar“).</p>
+    <div id="ce-mixed" contenteditable="true">Hallo<div><br></div><div><br></div><div><br></div><div><b>Fett  </b>&nbsp;Text<br>Zweite&nbsp; Zeile ...</div><ul><li>Punkt  eins ,</li><li><br></li><li><br></li><li><br></li><li>Punkt zwei</li></ul></div>
+  </section>
+
+  <section>
+    <h2>8. iframe mit designMode (gleicher Origin, z. B. ältere Editoren)</h2>
+    <iframe id="frame" title="Editor im iframe" srcdoc="<body style='font:15px system-ui;margin:.5rem .6rem'>Text&nbsp; im iframe ,<br><br><br><br>mit Leerzeilen ...</body>"></iframe>
+  </section>
+
+  <section>
+    <h2>9. readonly</h2>
+    <p class="hint">Erwartet: „Feld ist schreibgeschützt“.</p>
+    <textarea id="readonly" readonly>Nur  lesen ,  bitte .</textarea>
+  </section>
+
+  <script>
+    // Nachbau von Reacts Controlled-Input-Logik ohne React: React merkt sich den zuletzt per
+    // Setter geschriebenen Wert und ignoriert input-Events, wenn sich der DOM-Wert davon nicht
+    // unterscheidet. Bei jedem Render wird der State zurück ins Feld geschrieben.
+    (() => {
+      const el = document.getElementById('react-like');
+      const out = document.getElementById('react-state');
+      const native = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+      let state = el.value;
+      let tracked = state;
+      Object.defineProperty(el, 'value', {
+        configurable: true,
+        get() { return native.get.call(this); },
+        set(v) { tracked = String(v); native.set.call(this, v); },
+      });
+      const render = () => { el.value = state; out.textContent = 'State: ' + JSON.stringify(state); };
+      el.addEventListener('input', () => {
+        const domValue = native.get.call(el);
+        if (domValue === tracked) return; // React: „keine Änderung“, Event wird verworfen
+        tracked = domValue;
+        state = domValue;
+        render();
+      });
+      render();
+    })();
+
+    document.getElementById('frame').addEventListener('load', (e) => { e.target.contentDocument.designMode = 'on'; });
+  </script>
+</body>
+</html>

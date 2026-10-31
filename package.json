@@ -1,0 +1,14 @@
+{
+  "name": "browser-lint",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome-Extension (MV3): bereinigt Text im fokussierten Feld per Tastenkürzel.",
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\"",
+    "test:e2e": "node --test --test-concurrency=1 \"tests/e2e/*.test.js\"",
+    "test-page": "node -e \"require('./tests/e2e/helpers.js').serveTestPage(8080).then(({ url }) => console.log('Testseite: ' + url))\""
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
