@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Artwork 96×96 mit 16 px Rand (Chrome-Web-Store-Richtlinie). Kleine Größen werden auf 12–116 beschnitten. -->
+  <rect x="16" y="16" width="96" height="96" rx="24" fill="#1f4fd1"/>
+  <g stroke="#ffffff" stroke-width="10" stroke-linecap="round">
+    <line x1="37" y1="44" x2="91" y2="44"/>
+    <line x1="37" y1="64" x2="79" y2="64"/>
+    <line x1="37" y1="84" x2="55" y2="84"/>
+  </g>
+  <path d="M67 83 L77 93 L95 73" fill="none" stroke="#6ee7a0" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
